@@ -37,11 +37,22 @@ def test_add_existing_user(setup_database):
     assert added_first_time is True, "Пользователь должен быть добавлен при первом добавлении."
     assert added_second_time is False, "Добавление пользователя с существующим логином должно вернуть False."
 
-# Возможные варианты тестов:
-"""
-Тест добавления пользователя с существующим логином.
-Тест успешной аутентификации пользователя.
-Тест аутентификации несуществующего пользователя.
-Тест аутентификации пользователя с неправильным паролем.
-Тест отображения списка пользователей.
-"""
+def test_add_existing_user(setup_database):
+    added_first_time = add_user('admin', 'cooladmin@example.com', 'password123123')
+    added_second_time = add_user('admin', 'cooladmin1@example.com', 'anotherpassword123')
+    assert added_first_time is True, "Пользователь должен быть добавлен при первом добавлении."
+    assert added_second_time is False, "Добавление пользователя с существующим логином должно вернуть False."
+
+def test_authenticate_user(setup_database):
+    add_user('adminn', 'user@example.com', 'password123')
+    authenticated = authenticate_user('adminn', 'password123')
+    assert authenticated is True, "Должна быть успешная аутентификация с правильными логином и паролем."
+
+def test_authenticate_nonexistent_user(setup_database):
+    authenticated = authenticate_user('nonexistent', 'password123')
+    assert authenticated is False, "Аутентификация несуществующего пользователя должна быть неуспешной."
+
+def test_wrong_password(setup_database):
+    add_user('exampleuser', 'testmail@example.com', '12345')
+    authenticated = authenticate_user('exampleuser', 'wrong')
+    assert authenticated is False, "Аутентификация с неправильным паролем должна быть неуспешной."
