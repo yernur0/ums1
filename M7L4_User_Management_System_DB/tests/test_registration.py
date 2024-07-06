@@ -56,3 +56,14 @@ def test_wrong_password(setup_database):
     add_user('exampleuser', 'testmail@example.com', '12345')
     authenticated = authenticate_user('exampleuser', 'wrong')
     assert authenticated is False, "Аутентификация с неправильным паролем должна быть неуспешной."
+
+def test_display_users(setup_database, capsys):
+    add_user('testuser1', 'testuser1@example.com', 'password123')
+    add_user('testuser2', 'testuser2@example.com', 'password456')
+
+    display_users()
+
+    captured = capsys.readouterr()
+    assert "Логин: testuser1, Электронная почта: testuser1@example.com" in captured.out
+    assert "Логин: testuser2, Электронная почта: testuser2@example.com" in captured.out
+
